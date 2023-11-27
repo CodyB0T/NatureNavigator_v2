@@ -330,7 +330,9 @@ class Message(tk.Frame):
         self.messageString = self.messageString + "\n" + s
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
 
-        self.threadMessage(s)
+        # self.threadMessage(s)
+
+        self.Lora.add_to_queue(self.Lora.send_text, "1111111111111111", f"{s}")
 
         # self.Lora.send_text("b69b9d14e5e5b0c0", f"{s}")
 

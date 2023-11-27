@@ -1,28 +1,14 @@
-# Pi turns on
-
-# Joins Lora
-# return connected
-# return not_connected
-
-# Message
-
-# Weather
-
-# Emergency
-
-# Passive
-
-# Active
-
 import pandas as pd
 import serial
 import json
 from datetime import datetime, timedelta
 import os
 import time
+import queue
+import threading
 
 
-class lora:
+class Lora:
     connected_bool = False
 
     def __init__(self):
@@ -34,11 +20,26 @@ class lora:
         self.ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
         self.initialize_LoRaWAN()
 
-    def non_blocking_delay(self, delay_time):
-        """Non-blocking delay function."""
-        start_time = time.time()
-        while time.time() - start_time < delay_time:
-            pass  # This loop will keep running until the delay time has passed
+        # Create a queue for method calls
+        self.method_queue = queue.Queue()
+
+        # Create a thread to process the method queue
+        self.thread = threading.Thread(target=self.process_method_queue, daemon=True)
+        self.thread.start()
+
+    def add_to_queue(self, method, *args, **kwargs):
+        """Add a method and its arguments to the queue."""
+        self.method_queue.put((method, args, kwargs))
+
+    def process_method_queue(self):
+        """Process methods in the queue."""
+        while True:
+            try:
+                method, args, kwargs = self.method_queue.get()
+                method(*args, **kwargs)
+                print(self.method_queue)
+            except queue.Empty:
+                pass  # Ignore empty queue
 
     def initialize_LoRaWAN(self, retry_limit=3):
         """Attempt to initialize LoRaWAN connection with retry mechanism."""
@@ -154,7 +155,7 @@ class lora:
             self.ser.write(f"{sent_message}\n".encode())
             received_message = self.passive_listen()
             # time.sleep(15)  # Replaces time.sleep(15)
-            self.active_listen()
+            # self.active_listen()
             self.save_message_to_csv(sent_message)
             if received_message:
                 self.save_message_to_csv(received_message)
@@ -185,13 +186,15 @@ class lora:
 
 
 if __name__ == "__main__":
-    myLora = lora()
-    # myLora.request_weather_time()
-    # myLora.initialize_LoRaWAN()
-    myLora.request_weather_time()
-    # myLora.send_emergency("10.1100")
-    # myLora.non_blocking_delay(3)
-    myLora.send_text("b69b9d14e5e5b0c0", "hey4!")
-    # myLora.non_blocking_delay(3)
-    # myLora.active_listen()
-    # myLora.terminate_LoRaWAN()
+    myLora = Lora()
+
+    # Example usage with the queue system
+    myLora.add_to_queue(myLora.send_emergency, "10.1100")
+    myLora.add_to_queue(myLora.non_blocking_delay, 3)
+    myLora.add_to_queue(myLora.send_text, "b69b9d14e5e5b0c0", "hey4!")
+    myLora.add_to_queue(myLora.non_blocking_delay, 3)
+    myLora.add_to_queue(myLora.active_listen)
+    myLora.add_to_queue(myLora.terminate_LoRaWAN)
+
+    # Wait for the queue to be processed (optional)
+    myLora.method_queue.join()
