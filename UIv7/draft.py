@@ -88,6 +88,6 @@ if __name__ == "__main__":
     app = MainApplication(root)
 
     root.attributes("-fullscreen", True)
-    root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
-    
+    root.bind("<q>", lambda event: root.attributes("-fullscreen", False))
+
     root.mainloop()
