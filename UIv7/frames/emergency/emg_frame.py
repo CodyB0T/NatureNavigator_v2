@@ -123,7 +123,8 @@ class Emg(tk.Frame):
         cords = self.Gps.getCords()  # [latitude, longitude, 1]
         lat = cords[0]
         long = cords[1]
-        self.Lora.send_emergency(cords)
+        #self.Lora.send_emergency(cords)
+        self.Lora.add_to_queue(self.Lora.send_emergency,cords)
 
 
 # ====================================================================================================================

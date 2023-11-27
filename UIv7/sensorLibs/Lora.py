@@ -36,8 +36,8 @@ class Lora:
         while True:
             try:
                 method, args, kwargs = self.method_queue.get()
+                print(self.method_queue.qsize())
                 method(*args, **kwargs)
-                print(self.method_queue)
             except queue.Empty:
                 pass  # Ignore empty queue
 
@@ -50,7 +50,7 @@ class Lora:
             if bol.decode().strip() == "#JOINED":
                 self.connected_bool = True
                 self.ser.write(b"#BLANK\n")
-                time.sleep(20)
+                time.sleep(10)
                 return True
 
             time.sleep(5)  # Delay between retries
@@ -81,7 +81,7 @@ class Lora:
                 return received_message
             time.sleep(0.1)  # Short delay to prevent busy waiting
 
-    def save_message_to_csv(self, input_str, csv_filename="messages.csv"):
+    def save_message_to_csv(self, input_str, csv_filename="data/messages.csv"):
         if "#" in input_str and len(input_str.split("#")) == 2:
             address, message = input_str.split("#")
             if os.path.exists(csv_filename):
@@ -123,6 +123,7 @@ class Lora:
         if self.connected_bool:
             self.ser.write(b"#WEATHER\n")
             received_message = self.passive_listen()
+            print(received_message)
             # self.terminate_LoRaWAN()
             weather_data_start_index = received_message.find("[")
             system_time_str = received_message[:weather_data_start_index].strip()
@@ -142,7 +143,8 @@ class Lora:
             df = df[cols]
             system_time_df = pd.DataFrame([system_time_str], columns=["day"])
             df = pd.concat([df, system_time_df], ignore_index=True)
-            csv_file_path = "weather_data.csv"
+            print(df)
+            csv_file_path = "data/weather_data.csv"
             df.to_csv(csv_file_path, index=False, header=True)
         else:
             print("FAILED TO CONNECT TO NETWORK. CANNOT UPDATE TIME")
