@@ -170,15 +170,15 @@ class Env(tk.Frame):
         self.update_data()
 
     def update_data(self):
-        # self.canvas.itemconfig(
-        #     self.tempText, text=f"Temperature: {self.Bme.getTemp():.2f}"
-        # )
-        # self.canvas.itemconfig(
-        #     self.humdText, text=f"Humidity: {self.Bme.getHumidity():.2f}"
-        # )
-        # self.canvas.itemconfig(
-        #     self.pressText, text=f"Altitude: {self.Bme.getAltitude():.2f}"
-        # )
+        self.canvas.itemconfig(
+            self.tempText, text=f"Temperature: {self.Bme.getTemp():.2f}"
+        )
+        self.canvas.itemconfig(
+            self.humdText, text=f"Humidity: {self.Bme.getHumidity():.2f}"
+        )
+        self.canvas.itemconfig(
+            self.pressText, text=f"Altitude: {self.Bme.getAltitude():.2f}"
+        )
 
         self.forcast()
 
