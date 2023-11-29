@@ -157,7 +157,7 @@ class Lora:
             self.ser.write(f"{sent_message}\n".encode())
             received_message = self.passive_listen()
             # time.sleep(15)  # Replaces time.sleep(15)
-            # self.active_listen()
+            self.active_listen()
             self.save_message_to_csv(sent_message)
             if received_message:
                 self.save_message_to_csv(received_message)
@@ -165,7 +165,7 @@ class Lora:
             print("NOT CONNECTED TO NETWORK, CANNOT SEND TEXT")
             # self.terminate_LoRaWAN()
 
-    def active_listen(self, timeout=10):
+    def active_listen(self, timeout=5):
         while True:
             self.ser.write(b"#LISTEN\n")
             start_time = time.time()

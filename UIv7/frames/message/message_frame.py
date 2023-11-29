@@ -323,7 +323,12 @@ class Message(tk.Frame):
     # ============================================================================================================================
 
     # Function to clear messages
-    def updateMessageBoard(self, id):
+    def updateMessageLora(self):
+        self.Lora.add_to_queue(self.Lora.active_listen)
+
+    def updateMessageBoard(self):
+        id = "1111111111111111"
+
         df = pd.read_csv("data/messages.csv")
         clean = df.dropna(subset=[id])[id]
         self.messageString = ""
@@ -331,6 +336,8 @@ class Message(tk.Frame):
             self.messageString = self.messageString + "\n" + x
 
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
+
+        self.after(5000, self.updateMessageBoard)
 
     def clearMessages(self):
         self.messageString = ""
