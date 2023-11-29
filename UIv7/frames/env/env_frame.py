@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, font
 from tkinter import *
 import pandas as pd
 import time
@@ -7,10 +7,11 @@ from PIL import Image, ImageTk
 
 
 class Env(tk.Frame):
-    def __init__(self, master, Bme):
+    def __init__(self, master, Bme, Lora):
         super().__init__(master)
 
         self.Bme = Bme
+        self.Lora = Lora
 
         # ====================================================================================================================
         self.canvas = Canvas(
@@ -151,6 +152,18 @@ class Env(tk.Frame):
         )
         self.forcastFrame.place(x=self.findCenterx(self.forcastFrame), y=600)
 
+        # update forcast data
+        self.forcastbtnfont = font.Font(family="Helvetica", size=12, weight="bold")
+        self.forcastbtn = tk.Button(
+            self,
+            text="Update\nForcast",
+            bg="DeepSkyBlue2",
+            fg="white",
+            font=self.forcastbtnfont,
+            command=self.updateForcast,
+        )
+        self.forcastbtn.place(x=1000, y=675)
+
         # to make all the labels and display the data in forcastFrame
         self.forcast()
 
@@ -167,7 +180,9 @@ class Env(tk.Frame):
             self.pressText, text=f"Altitude: {self.Bme.getAltitude():.2f}"
         )
 
-        self.after(3000, self.update_data)
+        self.forcast()
+
+        self.after(5000, self.update_data)
 
     def to_Fahrenheit(self, celsius):
         fahrenheit = (float(celsius) * 9 / 5) + 32
@@ -243,13 +258,18 @@ class Env(tk.Frame):
 
         return self.x
 
+    def updateForcast(self):
+        self.Lora.add_to_queue(self.Lora.request_weather_time)
+
 
 if __name__ == "__main__":
+    from sensorLibsTest.Bme import Bme
+
     root = tk.Tk()
     root.geometry("1280x800")
 
     # Instantiate Plant class
-    frame = Env(root)
+    frame = Env(root, Bme)
     frame.config(width=1200, height=800)
 
     # Pack the Plant frame

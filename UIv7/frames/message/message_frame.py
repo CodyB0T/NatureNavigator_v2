@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import Canvas, Button, PhotoImage
 from PIL import Image, ImageTk
 import threading
+import pandas as pd
 
 
 class Message(tk.Frame):
@@ -312,7 +313,7 @@ class Message(tk.Frame):
         # Add a new button to clear the canvas
         self.clearButton = tk.Button(
             self,
-            text="[Clear Messages]",
+            text="[Update Messages]",
             command=self.clearMessages,
             width=20,
             height=3,
@@ -322,6 +323,15 @@ class Message(tk.Frame):
     # ============================================================================================================================
 
     # Function to clear messages
+    def updateMessageBoard(self, id):
+        df = pd.read_csv("data/messages.csv")
+        clean = df.dropna(subset=[id])[id]
+        self.messageString = ""
+        for x in clean:
+            self.messageString = self.messageString + "\n" + x
+
+        self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
+
     def clearMessages(self):
         self.messageString = ""
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
@@ -330,7 +340,9 @@ class Message(tk.Frame):
         self.messageString = self.messageString + "\n" + s
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
 
-        self.threadMessage(s)
+        # self.threadMessage(s)
+
+        self.Lora.add_to_queue(self.Lora.send_text, "1111111111111111", f"{s}")
 
         # self.Lora.send_text("b69b9d14e5e5b0c0", f"{s}")
 

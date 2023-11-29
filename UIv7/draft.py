@@ -60,7 +60,7 @@ class MainApplication:
         self.frames[1] = Plant(self.mainFrame)
 
         # env
-        self.frames[2] = Env(self.mainFrame, self.Bme)
+        self.frames[2] = Env(self.mainFrame, self.Bme, self.Lora)
 
         # message
         self.frames[3] = Message(self.mainFrame, self.Lora)
