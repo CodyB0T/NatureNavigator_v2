@@ -325,19 +325,24 @@ class Message(tk.Frame):
     # Function to clear messages
     def updateMessageLora(self):
         self.Lora.add_to_queue(self.Lora.active_listen)
+        self.updateMessageBorad()
 
+    # update message window of the id loops every 5 sec
     def updateMessageBoard(self):
-        id = "1111111111111111"
+        if self.Lora.messageDone == True:
+            self.Lora.messageDone = False
 
-        df = pd.read_csv("data/messages.csv")
-        clean = df.dropna(subset=[id])[id]
-        self.messageString = ""
-        for x in clean:
-            self.messageString = self.messageString + "\n" + x
+            id = "1111111111111111"
 
-        self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
+            df = pd.read_csv("data/messages.csv")
+            clean = df.dropna(subset=[id])[id]
+            self.messageString = ""
+            for x in clean:
+                self.messageString = self.messageString + "\n" + x
 
-        self.after(5000, self.updateMessageBoard)
+            self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
+        else:
+            self.after(1000, self.updateMessageBoard)
 
     def clearMessages(self):
         self.messageString = ""

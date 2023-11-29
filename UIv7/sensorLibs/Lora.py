@@ -13,6 +13,10 @@ class Lora:
 
     def __init__(self):
         # Constants for the serial connection
+
+        # know when to update page
+        self.messageDone = False
+
         SERIAL_PORT = "/dev/ttyUSB0"
         BAUD_RATE = 115200
 
@@ -115,6 +119,7 @@ class Lora:
             print(received_message)
         else:
             print("NOT CONNECTED TO NETWORK, CANNOT SEND DISTRESS CALL")
+
             # self.terminate_LoRaWAN()
 
     def request_weather_time(self):
@@ -179,6 +184,9 @@ class Lora:
                 if response:
                     if response == "#FALSE":
                         print("All messages received.")
+
+                        # know when to update page
+                        self.messageDone = True
                         # self.terminate_LoRaWAN()
                         return
                     else:
