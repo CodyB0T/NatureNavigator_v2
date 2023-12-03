@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, font
 from tkinter import *
 import pandas as pd
 import time
@@ -7,10 +7,11 @@ from PIL import Image, ImageTk
 
 
 class Env(tk.Frame):
-    def __init__(self, master, Bme):
+    def __init__(self, master, Bme, Lora):
         super().__init__(master)
 
         self.Bme = Bme
+        self.Lora = Lora
 
         # ====================================================================================================================
         self.canvas = Canvas(
@@ -114,7 +115,7 @@ class Env(tk.Frame):
         )
 
         self.tempText = self.canvas.create_text(
-            480.0,
+            435.0,
             480.0,
             anchor="nw",
             text="Temperature: 21°C ",
@@ -123,7 +124,7 @@ class Env(tk.Frame):
         )
 
         self.humdText = self.canvas.create_text(
-            480.0,
+            435.0,
             515.0,
             anchor="nw",
             text="Humidity: 50 % ",
@@ -132,7 +133,7 @@ class Env(tk.Frame):
         )
 
         self.pressText = self.canvas.create_text(
-            480.0,
+            435.0,
             550.0,
             anchor="nw",
             text="Pressure: 1000 hPa ",
@@ -151,6 +152,31 @@ class Env(tk.Frame):
         )
         self.forcastFrame.place(x=self.findCenterx(self.forcastFrame), y=600)
 
+        # update forcast data
+        self.forcastbtnfont = font.Font(family="Helvetica", size=12, weight="bold")
+        self.forcastbtn = tk.Button(
+            self,
+            text="Update\nForcast",
+            bg="DeepSkyBlue2",
+            fg="white",
+            font=self.forcastbtnfont,
+            command=self.updateForcast,
+        )
+        self.forcastbtn.place(x=1000, y=675)
+
+        #reconnect to lora
+        self.reconnectLora = tk.Button(
+            self,
+            text = "Reconnect\nLora",
+            bg="DeepSkyBlue2",
+            fg="white",
+            font=self.forcastbtnfont,
+            command=self.reconnectToLora,
+        )
+
+        self.reconnectLora.place(x = 100, y = 675)
+
+
         # to make all the labels and display the data in forcastFrame
         self.forcast()
 
@@ -158,16 +184,18 @@ class Env(tk.Frame):
 
     def update_data(self):
         self.canvas.itemconfig(
-            self.tempText, text=f"Temperature: {self.Bme.getTemp():.2f}"
+            self.tempText, text=f"Temperature: {self.Bme.getTemp():.2f} °C"
         )
         self.canvas.itemconfig(
-            self.humdText, text=f"Humidity: {self.Bme.getHumidity():.2f}"
+            self.humdText, text=f"Humidity: {self.Bme.getHumidity():.2f} %"
         )
         self.canvas.itemconfig(
-            self.pressText, text=f"Altitude: {self.Bme.getAltitude():.2f}"
+            self.pressText, text=f"Altitude: {self.Bme.getAltitude():.2f} m"
         )
 
-        self.after(3000, self.update_data)
+        self.forcast()
+
+        self.after(5000, self.update_data)
 
     def to_Fahrenheit(self, celsius):
         fahrenheit = (float(celsius) * 9 / 5) + 32
@@ -182,7 +210,7 @@ class Env(tk.Frame):
             self.forcastFrame,
             bg="DeepSkyBlue2",
             fg="white",
-            text="High-Low",
+            text="High-Low(°F)",
             font=self.custom_font,
         )
         self.per.grid(row=1, column=0)
@@ -229,6 +257,8 @@ class Env(tk.Frame):
             )
             preChance.grid(row=2, column=col + 1)
 
+        
+
         self.update()  # THIS IS IMPORTANT, this will update the geometry of the forcastFrame, so I can center the frame
 
         # places the forcastFrame in the center after place all the other labels
@@ -243,13 +273,24 @@ class Env(tk.Frame):
 
         return self.x
 
+    def updateForcast(self):
+        self.Lora.add_to_queue(self.Lora.request_weather_time)
+
+    def reconnectToLora(self):
+        self.Lora.add_to_queue(self.Lora.terminate_LoRaWAN)
+        self.Lora.add_to_queue(self.Lora.initialize_LoRaWAN)
+        
+
+
 
 if __name__ == "__main__":
+    from sensorLibsTest.Bme import Bme
+
     root = tk.Tk()
     root.geometry("1280x800")
 
     # Instantiate Plant class
-    frame = Env(root)
+    frame = Env(root, Bme)
     frame.config(width=1200, height=800)
 
     # Pack the Plant frame

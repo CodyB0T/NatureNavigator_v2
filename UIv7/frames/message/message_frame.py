@@ -2,11 +2,14 @@ import tkinter as tk
 from tkinter import Canvas, Button, PhotoImage
 from PIL import Image, ImageTk
 import threading
+import pandas as pd
 
 
 class Message(tk.Frame):
     def __init__(self, master, Lora):
         super().__init__(master)
+
+        self.canLoop = False
 
         self.thread = None
 
@@ -221,7 +224,7 @@ class Message(tk.Frame):
         self.GPS_Coordinates_Button = tk.Button(
             self,
             text="[Send GPS Coordinates]",
-            command=lambda: self.addMessage("client: [Insert GPS coordinates here]"),
+            command=self.theCords,
             width=20,
             height=3,
         )
@@ -312,16 +315,61 @@ class Message(tk.Frame):
         # Add a new button to clear the canvas
         self.clearButton = tk.Button(
             self,
-            text="[Clear Messages]",
-            command=self.clearMessages,
+            text="[Update Messages]",
+            command=self.updateMessageLora,
             width=20,
             height=3,
         )
         self.clearButton.place(x=1025, y=260)
 
+        self.updatemessages()
+
+        # self.loopUpdateBoard()
     # ============================================================================================================================
 
+    def theCords(self):
+        cords = self.Gps.getCords()
+        print(cords)
+        self.addMessage(f"client: {cords[0]:.7f}, {cords[1]:.7f}")
+
     # Function to clear messages
+    def updateMessageLora(self):
+        self.Lora.add_to_queue(self.Lora.active_listen)
+        self.canLoop = True
+        self.updateMessageBoard()
+
+    # update message window of the id loops every 5 sec
+    def updateMessageBoard(self):
+        print(f"messageDone: {self.Lora.messageDone}")
+        print(f"canloop: {self.canLoop}")
+        if self.Lora.messageDone == True:
+
+            self.Lora.messageDone = False
+            self.canLoop = False
+
+            self.updatemessages()
+
+        elif (self.canLoop):
+            self.after(200, self.updateMessageBoard)
+
+    def loopUpdateBoard(self):
+        self.updatemessages()
+
+        self.after(5000, self.loopUpdateBoard)
+    
+    def updatemessages(self):
+        id = "1111111111111111"
+
+        df = pd.read_csv("data/messages.csv")
+        clean = df.dropna(subset=[id])[id]
+        self.messageString = ""
+        for x in clean:
+            self.messageString = self.messageString + "\n" + x
+
+        print("message updated")
+
+        self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
+
     def clearMessages(self):
         self.messageString = ""
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
@@ -330,20 +378,19 @@ class Message(tk.Frame):
         self.messageString = self.messageString + "\n" + s
         self.messagesCanvas.itemconfig(self.messages, text=self.messageString)
 
-        self.threadMessage(s)
+        self.Lora.add_to_queue(self.Lora.send_text, "1111111111111111", f"{s}")
 
-        # self.Lora.send_text("b69b9d14e5e5b0c0", f"{s}")
 
-    def threadMessage(self, s):
-        if self.thread and self.thread.is_alive():
-            print("Threaded function is already running.")
-        else:
-            # Create and start a new thread
-            self.thread = threading.Thread(
-                target=self.Lora.send_text, args=("b69b9d14e5e5b0c0", f"{s}")
-            )
-            self.thread.start()
-            print("Threaded function started.")
+    # def threadMessage(self, s):
+    #     if self.thread and self.thread.is_alive():
+    #         print("Threaded function is already running.")
+    #     else:
+    #         # Create and start a new thread
+    #         self.thread = threading.Thread(
+    #             target=self.Lora.send_text, args=("b69b9d14e5e5b0c0", f"{s}")
+    #         )
+    #         self.thread.start()
+    #         print("Threaded function started.")
 
     def findCenterx(self, object):
         self.object = object
