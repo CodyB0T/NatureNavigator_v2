@@ -1,0 +1,1671 @@
+[
+    {
+        "id": "5f4960e4b6f5c9e0",
+        "type": "tab",
+        "label": "Receive Uplinks",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cfca3d59cadda3d5",
+        "type": "tab",
+        "label": "Emergency, Message and Weather",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b7e44b02a5119b3d",
+        "type": "tab",
+        "label": "Openweather Backend",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "eb751e6e926f325d",
+        "type": "tab",
+        "label": "Backend",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0b71e225112068c6",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d45708cbe3ab1ae1",
+        "type": "junction",
+        "z": "5f4960e4b6f5c9e0",
+        "x": 560,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0d8a1879e211d99b",
+        "type": "mqtt-broker",
+        "name": "Nano MQTT",
+        "broker": "tcp://127.0.0.1:1883",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "9877604e51b744ef",
+        "type": "nexmobasic"
+    },
+    {
+        "id": "9716ab0fec57fd8e",
+        "type": "mqtt in",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "",
+        "topic": "application/+/device/+/event/+",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0d8a1879e211d99b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "77d56d3b223274f6"
+            ]
+        ]
+    },
+    {
+        "id": "c6f60a1369b13921",
+        "type": "comment",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "MQTT payload",
+        "info": "MQTT payload",
+        "x": 220,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "57ca84fbcdb68a21",
+        "type": "file",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "String to File",
+        "filename": "payload",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 910,
+        "y": 280,
+        "wires": [
+            [
+                "02aef1dda174d1c0"
+            ]
+        ]
+    },
+    {
+        "id": "9697bb9ad3109075",
+        "type": "debug",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "Display File",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "02aef1dda174d1c0",
+        "type": "file in",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "",
+        "filename": "payload",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1060,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4dd8f2b6c9075058",
+        "type": "comment",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "↑read result from file",
+        "info": "",
+        "x": 1070,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b9e1770996054c4f",
+        "type": "comment",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "↓write to file specified by filename property, later can use function to create multiple files for use",
+        "info": "",
+        "x": 1160,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "77d56d3b223274f6",
+        "type": "device event",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "",
+        "eventType": "up",
+        "x": 470,
+        "y": 260,
+        "wires": [
+            [
+                "b4c45d142bf0b075",
+                "e8579ba9040250ec"
+            ]
+        ]
+    },
+    {
+        "id": "b4c45d142bf0b075",
+        "type": "function",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "Base64 to String",
+        "func": "// If the payload is a Buffer\n//let decodedPayload = msg.payload.data.toString('utf8');\n\n// If the payload is base64 encoded\n let bufferPayload = Buffer.from(msg.payload.data, 'base64');\n let decodedPayload = bufferPayload.toString('utf8');\n\nreturn {\n    devEui: msg.payload.deviceInfo.devEui,\n    fPort: msg.payload.fPort,\n    confirmed: false,\n    payload: decodedPayload\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 260,
+        "wires": [
+            [
+                "57ca84fbcdb68a21"
+            ]
+        ]
+    },
+    {
+        "id": "f47dd1ac30b0e22b",
+        "type": "comment",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "Sorts out only device uplinks",
+        "info": "MQTT payload",
+        "x": 500,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cf067a296ef5f440",
+        "type": "comment",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "Converts from Base64 to String (and removes anything not message related)↑",
+        "info": "",
+        "x": 450,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e8579ba9040250ec",
+        "type": "link out",
+        "z": "5f4960e4b6f5c9e0",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "8c626c0bbb257c1d",
+            "37b2c440c9a1de35",
+            "13f70f6c2ee58694"
+        ],
+        "x": 915,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "00856c7814171824",
+        "type": "switch",
+        "z": "cfca3d59cadda3d5",
+        "name": "",
+        "property": "msg.payload.data",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "I0VN",
+                "vt": "str"
+            },
+            {
+                "t": "empty"
+            },
+            {
+                "t": "eq",
+                "v": "I0JMQU5L",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "I1dFQVRIRVI=",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "I0xJU1RFTg==",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 6,
+        "x": 570,
+        "y": 520,
+        "wires": [
+            [
+                "98903166955a9455",
+                "3f46b4bb0b46bc73"
+            ],
+            [],
+            [],
+            [
+                "1d3362b1882dd1af"
+            ],
+            [
+                "78179c6ba08c0abe",
+                "20013ae43b3524d9",
+                "1d5acef91c032075"
+            ],
+            [
+                "8a53cd828a9a5f1c",
+                "2c1c8f8cd9a79ac6"
+            ]
+        ]
+    },
+    {
+        "id": "b3d49584aa7d5b5d",
+        "type": "device downlink",
+        "z": "cfca3d59cadda3d5",
+        "name": "",
+        "server": "192.168.0.1:8080",
+        "useTls": false,
+        "apiToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjaGlycHN0YWNrIiwiaXNzIjoiY2hpcnBzdGFjayIsInN1YiI6IjA3NzUzNzY0LWUzMDItNGE1YS1hZDMwLWU5ZDBiNDY2NjkxZSIsInR5cCI6ImtleSJ9.y6g8sIMVO8FjjRD5fp3odHVJHIdWkt8RssMTfa_Ax7U",
+        "encoding": "base64",
+        "x": 1100,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "13f70f6c2ee58694",
+        "type": "link in",
+        "z": "cfca3d59cadda3d5",
+        "name": "link in 2",
+        "links": [
+            "e8579ba9040250ec"
+        ],
+        "x": 465,
+        "y": 520,
+        "wires": [
+            [
+                "00856c7814171824"
+            ]
+        ]
+    },
+    {
+        "id": "bbc162f98453236c",
+        "type": "debug",
+        "z": "cfca3d59cadda3d5",
+        "name": "weather_message",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1110,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "98903166955a9455",
+        "type": "function",
+        "z": "cfca3d59cadda3d5",
+        "name": "Decode_and_sort_email_message",
+        "func": "// Remove any occurrence of the string \"I0VN\"\nvar cleanedData = msg.payload.data.replace(/I0VN/g, '');\n\n// Decode the cleaned data from base64 to utf-8\nmsg.payload = Buffer.from(cleanedData, 'base64').toString('utf-8');\n\n// Return the modified msg object\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 300,
+        "wires": [
+            [
+                "45fd269b8e68389c",
+                "69a26ad5b1c87247"
+            ]
+        ]
+    },
+    {
+        "id": "33d653024e565af8",
+        "type": "inject",
+        "z": "cfca3d59cadda3d5",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload.data",
+                "v": "I1dFQVRIRVI=",
+                "vt": "str"
+            },
+            {
+                "p": "payload.fPort",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "p": "payload.deviceInfo.devEui",
+                "v": "b69b9d14e5e5b0c0",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 750,
+        "y": 440,
+        "wires": [
+            [
+                "1d3362b1882dd1af"
+            ]
+        ]
+    },
+    {
+        "id": "45fd269b8e68389c",
+        "type": "e-mail",
+        "z": "cfca3d59cadda3d5",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "naturenavigatorem@gmail.com",
+        "dname": "Emergency",
+        "x": 1350,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "1d3362b1882dd1af",
+        "type": "function",
+        "z": "cfca3d59cadda3d5",
+        "name": "decode_message_weather",
+        "func": "var payloadData = msg.payload.data;\n\n// Create a new Date object for the current date and time\nconst now = new Date();\n\n// Convert the date to EST and format it in 24-hour format\nconst options = {\n    timeZone: \"America/New_York\",\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    hour12: false  // Use 24-hour format\n};\n\nif (payloadData) {\n    // Decode the devEui from Base64\n    var decodedDevEui = Buffer.from(payloadData, 'base64').toString('utf-8');\n\n    // Check if decodedDevEui contains \"#WEATHER\"\n    if (decodedDevEui.includes(\"#WEATHER\")) {\n        const estTime = now.toLocaleString('en-US', options);\n        // Retrieve the groupedData global variable\n        var groupedData = global.get('groupedData') || \"\";\n\n        // Append the system time to the end of groupedData for this instance (not updating the global variable)\n        var combinedDat = `${estTime}${groupedData}`;\n\n        // Convert combinedDat to Base64\n        var combinedDatBase64 = Buffer.from(combinedDat).toString('base64');\n\n        return {\n            devEui: msg.payload.deviceInfo.devEui,\n            fPort: msg.payload.fPort,\n            confirmed: false,\n            payload: combinedDatBase64\n        };\n    }\n\n    else {\n        return { error: \"Not weather\" };\n    }\n} else {\n    return { error: \"Payload data is missing\" };\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 500,
+        "wires": [
+            [
+                "b3d49584aa7d5b5d",
+                "bbc162f98453236c"
+            ]
+        ]
+    },
+    {
+        "id": "8a53cd828a9a5f1c",
+        "type": "link out",
+        "z": "cfca3d59cadda3d5",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "6e82c95c6c2e8b84"
+        ],
+        "x": 755,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "3f46b4bb0b46bc73",
+        "type": "function",
+        "z": "cfca3d59cadda3d5",
+        "name": "Repack_and_send_ack",
+        "func": "var emailconfirm = \"Emergency Sent\"\n\n// Convert combinedDat to Base64\nvar email64 = Buffer.from(emailconfirm).toString('base64');\n\nreturn {\n    devEui: msg.payload.deviceInfo.devEui,\n    fPort: msg.payload.fPort,\n    confirmed: false,\n    payload: email64\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 260,
+        "wires": [
+            [
+                "6630f98d47b01d69"
+            ]
+        ]
+    },
+    {
+        "id": "6630f98d47b01d69",
+        "type": "device downlink",
+        "z": "cfca3d59cadda3d5",
+        "name": "",
+        "server": "192.168.0.1:8080",
+        "useTls": false,
+        "apiToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjaGlycHN0YWNrIiwiaXNzIjoiY2hpcnBzdGFjayIsInN1YiI6IjA3NzUzNzY0LWUzMDItNGE1YS1hZDMwLWU5ZDBiNDY2NjkxZSIsInR5cCI6ImtleSJ9.y6g8sIMVO8FjjRD5fp3odHVJHIdWkt8RssMTfa_Ax7U",
+        "encoding": "base64",
+        "x": 1060,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2c1c8f8cd9a79ac6",
+        "type": "function",
+        "z": "cfca3d59cadda3d5",
+        "name": "Save_message_context",
+        "func": "// Check if the property exists\n\nif (msg.payload.rxInfo[0].context) {\n    // Set the global variable\n    global.set(\"myGlobalContext\", msg.payload.rxInfo[0].context);\n} else {\n    // Log an error or handle the case where the expected data isn't present\n    node.error(\"The expected msg.payload.txInfo.context property is missing.\");\n}\n\n// Usually, we pass on the msg object for further processing or debugging\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "78179c6ba08c0abe",
+        "type": "link out",
+        "z": "cfca3d59cadda3d5",
+        "name": "Link Out Active Listen",
+        "mode": "link",
+        "links": [
+            "a00ac2e6e6562d62"
+        ],
+        "x": 755,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "20013ae43b3524d9",
+        "type": "function",
+        "z": "cfca3d59cadda3d5",
+        "name": "Save_ack_deveui",
+        "func": "// Check if the property exists\n\nif (msg.payload.deviceInfo.devEui) {\n    // Set the global variable\n    global.set(\"myGlobaldevEui\", msg.payload.deviceInfo.devEui);\n} else {\n    // Log an error or handle the case where the expected data isn't present\n    node.error(\"The expected msg.payload.deviceInfo.devEui property is missing.\");\n}\n\n// Usually, we pass on the msg object for further processing or debugging\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1d5acef91c032075",
+        "type": "debug",
+        "z": "cfca3d59cadda3d5",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "69a26ad5b1c87247",
+        "type": "sendsms",
+        "z": "cfca3d59cadda3d5",
+        "creds": "9877604e51b744ef",
+        "to": "14046687076",
+        "fr": "13024869249",
+        "text": "{{msg.payload}}",
+        "unicode": false,
+        "x": 1350,
+        "y": 320,
+        "wires": [
+            [
+                "6694377a972a9472"
+            ]
+        ]
+    },
+    {
+        "id": "6694377a972a9472",
+        "type": "debug",
+        "z": "cfca3d59cadda3d5",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1520,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "be598d07f06eae34",
+        "type": "openweathermap in",
+        "z": "b7e44b02a5119b3d",
+        "name": "OpenWeather",
+        "wtype": "forecast",
+        "lon": "",
+        "lat": "",
+        "city": "Marietta",
+        "country": "US",
+        "language": "en",
+        "x": 250,
+        "y": 580,
+        "wires": [
+            [
+                "4efb07e3bdc3a0fc"
+            ]
+        ]
+    },
+    {
+        "id": "4efb07e3bdc3a0fc",
+        "type": "function",
+        "z": "b7e44b02a5119b3d",
+        "name": "groupedData",
+        "func": "const data = msg.payload;\n\nconst groupedData = [];\nfor (let i = 0; i < data.length; i += 8) {\n    const group = data.slice(i, i + 8);\n    const m = Number(Math.max(...group.map(item => item.main.temp)).toFixed(1));\n    const n = Number(Math.min(...group.map(item => item.main.temp)).toFixed(1));\n    const p = group[0].pop;\n\n    groupedData.push({ m, n, p });\n}\n\n// Set groupedData as an environment variable\n//const groupedDataString = JSON.stringify(groupedData);\n//global.set('groupedData', groupedDataString);\n\nmsg.payload = groupedData;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 580,
+        "wires": [
+            [
+                "02e0bd98c189f0b8"
+            ]
+        ]
+    },
+    {
+        "id": "02e0bd98c189f0b8",
+        "type": "file",
+        "z": "b7e44b02a5119b3d",
+        "name": "String to File",
+        "filename": "weather_data",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 590,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d40a35a05281c135",
+        "type": "file in",
+        "z": "b7e44b02a5119b3d",
+        "name": "",
+        "filename": "weather_data",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 600,
+        "y": 780,
+        "wires": [
+            [
+                "110619602d3ff161"
+            ]
+        ]
+    },
+    {
+        "id": "110619602d3ff161",
+        "type": "function",
+        "z": "b7e44b02a5119b3d",
+        "name": "File_to_global_groupedData",
+        "func": "const dataFromFile = msg.payload;\nglobal.set('groupedData', dataFromFile);\nreturn msg;  // or you can return null if you don't want to pass the message further\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 580,
+        "wires": [
+            [
+                "58ee2eb135f1707c"
+            ]
+        ]
+    },
+    {
+        "id": "0b1f462b33b421a0",
+        "type": "inject",
+        "z": "b7e44b02a5119b3d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 780,
+        "wires": [
+            [
+                "d40a35a05281c135"
+            ]
+        ]
+    },
+    {
+        "id": "e35931254c260af2",
+        "type": "function",
+        "z": "b7e44b02a5119b3d",
+        "d": true,
+        "name": "File_to_global_groupedData",
+        "func": "// Create a new Date object for the current date and time\nconst now = new Date();\n\n// Convert the date to EST and format it in 24-hour format\nconst options = {\n    timeZone: \"America/New_York\",\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    hour12: false  // Use 24-hour format\n};\nconst estTime = now.toLocaleString('en-US', options);\n\n// Get data from the payload\nconst dataFromFile = msg.payload;\n\n// Append the time to the end of dataFromFile\nconst combinedDat = `${estTime}|${dataFromFile}`;\n\n// Store the combined data in the global context\nglobal.set('groupedDat', combinedDat);\n\n// Update the message payload to the combined data\nmsg.payload = combinedDat;\n\nreturn msg;  // or you can return null if you don't want to pass the message further\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "58ee2eb135f1707c",
+        "type": "debug",
+        "z": "b7e44b02a5119b3d",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "3d8bf80cc57d15fe",
+        "type": "mqtt in",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "topic": "application/+/device/+/event/+",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0d8a1879e211d99b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "a78857cf189c458f"
+            ]
+        ]
+    },
+    {
+        "id": "a78857cf189c458f",
+        "type": "device event",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "eventType": "txack",
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [
+                "a568c8d8b7d2f2ef",
+                "86430e79b3044149"
+            ]
+        ]
+    },
+    {
+        "id": "6e82c95c6c2e8b84",
+        "type": "link in",
+        "z": "eb751e6e926f325d",
+        "name": "link in 3",
+        "links": [
+            "8a53cd828a9a5f1c"
+        ],
+        "x": 185,
+        "y": 260,
+        "wires": [
+            [
+                "fe758aa6746fc0a4"
+            ]
+        ]
+    },
+    {
+        "id": "2d9b1a1435ee41c4",
+        "type": "device downlink",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "server": "192.168.0.1:8080",
+        "useTls": false,
+        "apiToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjaGlycHN0YWNrIiwiaXNzIjoiY2hpcnBzdGFjayIsInN1YiI6IjA3NzUzNzY0LWUzMDItNGE1YS1hZDMwLWU5ZDBiNDY2NjkxZSIsInR5cCI6ImtleSJ9.y6g8sIMVO8FjjRD5fp3odHVJHIdWkt8RssMTfa_Ax7U",
+        "encoding": "base64",
+        "x": 580,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "271b8e82349cd52d",
+        "type": "function",
+        "z": "eb751e6e926f325d",
+        "name": "decode_message",
+        "func": "var payloadData = msg.payload.data;\n\nconsole.log(\"payloadData:\", payloadData); // Log the payloadData\nif (payloadData) {\n    // Decode the devEui from Base64\n    var decodedDevEui = Buffer.from(payloadData, 'base64').toString('utf-8');\n    // Split the decoded payload using the '#' delimiter\n    var parts = decodedDevEui.split('#');\n    //console.log(\"decodedDevEui:\", decodedDevEui); // Log the decodedDevEui\n\n    // Check if parts[0] is equal to 16 characters\n    if (parts[0] && parts[0].length === 16) {\n        // Re-encode devEui as Base64\n        var devEuiBase64 = Buffer.from(parts[0]).toString('base64');\n        var payloadBase64 = parts[1];\n        // Return the object with the devEui and other information\n        return {\n            devEui: parts[0],\n            fPort: msg.payload.fPort,\n            confirmed: false,\n            payload: msg.payload.data,\n            payload2: msg.payload.data\n        };\n    } else {\n        // If parts[0] is not 16 characters, return an error object\n        return { error: \"devEui is not 16 characters\" };\n    }\n}\nelse {\n    return { error: \"Payload data is missing\" };\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "20085b627fa0a495"
+            ]
+        ]
+    },
+    {
+        "id": "75d1377ab492eca1",
+        "type": "file",
+        "z": "eb751e6e926f325d",
+        "name": "String to File",
+        "filename": "message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 990,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "85f7de755490d244",
+        "type": "file in",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1180,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "533c97dbd98d6b7f",
+        "type": "function",
+        "z": "eb751e6e926f325d",
+        "name": "function 3",
+        "func": "// Assuming the previous function has already processed the data and added the properties to msg\n//var car = msg.payload\nvar dataForCsv = {\n    col1: msg.devEui, // devEui\n    col2: msg.fPort, // fPort\n    col3: msg.confirmed, // confirmed\n    col4: msg.payload2 // Original payload data\n    // Add more columns if needed\n};\n\n// Set the payload to the formatted data for CSV\nmsg.payload = dataForCsv; // CSV node expects an object or an array of objects\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 320,
+        "wires": [
+            [
+                "c32a2a45d7426476"
+            ]
+        ]
+    },
+    {
+        "id": "7b69dc813a926129",
+        "type": "file in",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1000,
+        "y": 200,
+        "wires": [
+            [
+                "f1ef89d747356b32"
+            ]
+        ]
+    },
+    {
+        "id": "f1ef89d747356b32",
+        "type": "csv",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1130,
+        "y": 200,
+        "wires": [
+            [
+                "e9f444b38fd55acc"
+            ]
+        ]
+    },
+    {
+        "id": "e9f444b38fd55acc",
+        "type": "function",
+        "z": "eb751e6e926f325d",
+        "name": "function 5",
+        "func": "// Example function node code to remove the last row from the CSV data\nlet rows = msg.payload; // Assuming msg.payload is an array of objects from the CSV node\nlet rowed\n// Remove the last element (row) from the array\n//rowed = rows.pop();\nrows.splice(-1);\n\n// Convert the array back to a CSV string\nmsg.payload = rows;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 200,
+        "wires": [
+            [
+                "a5302482239647ae"
+            ]
+        ]
+    },
+    {
+        "id": "2e760449aeb8b34d",
+        "type": "inject",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.data",
+                "v": "YjY5YjlkMTRlNWU1YjBjMCNIb3N0OiBIZWxsbyBXb3JsZDE==",
+                "vt": "str"
+            },
+            {
+                "p": "payload.fPort",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "p": "payload.deviceInfo.devEui",
+                "v": "1111111111111111",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 460,
+        "wires": [
+            [
+                "fe758aa6746fc0a4"
+            ]
+        ]
+    },
+    {
+        "id": "a568c8d8b7d2f2ef",
+        "type": "function",
+        "z": "eb751e6e926f325d",
+        "name": "check_same",
+        "func": "// Retrieve the global context value\nvar globalContext = global.get(\"myGlobalContext\");\n\n// Retrieve the current message's context value\nvar currentContext = msg.payload.txInfo.context;\n\n// Check if both contexts exist and are identical\nif (globalContext === currentContext) {\n    // The contexts are identical, do something here\n    // For example, set a flag or call a function, etc.\n    node.log(\"Contexts are identical.\");\n    // You can set a property in the message or trigger some action\n    msg.payload = true;\n} else {\n    // Contexts are not identical or one of them is missing, do nothing\n    // Optionally, you can log a message or set a flag\n    node.log(\"Contexts are not identical or one of them is missing.\");\n    // You can stop the flow by returning null or just pass the message without changes\n    msg.payload = false;\n}\n\n// Pass the message to the next node in the flow\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "641b4437ef745e76"
+            ]
+        ]
+    },
+    {
+        "id": "641b4437ef745e76",
+        "type": "switch",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 870,
+        "y": 200,
+        "wires": [
+            [
+                "7b69dc813a926129"
+            ]
+        ]
+    },
+    {
+        "id": "d81c080d0d2dc496",
+        "type": "file in",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1560,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "43dc41c544675f0b",
+        "type": "debug",
+        "z": "eb751e6e926f325d",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "a5302482239647ae",
+        "type": "csv",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "col1,col2,col3,col4,col5",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": true,
+        "include_null_values": true,
+        "x": 1410,
+        "y": 200,
+        "wires": [
+            [
+                "894d551d90223f2a"
+            ]
+        ]
+    },
+    {
+        "id": "894d551d90223f2a",
+        "type": "file",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "final_message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1580,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4fe16414c76e29c",
+        "type": "csv",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "sep": ",",
+        "hdrin": false,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": false,
+        "x": 830,
+        "y": 320,
+        "wires": [
+            [
+                "75d1377ab492eca1",
+                "0180f3c36f9c822a"
+            ]
+        ],
+        "inputLabels": [
+            "msg.devEui"
+        ]
+    },
+    {
+        "id": "c32a2a45d7426476",
+        "type": "change",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "devEui",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "fPort",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "confirmed",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload2",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "_msgid",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 320,
+        "wires": [
+            [
+                "a4fe16414c76e29c"
+            ]
+        ]
+    },
+    {
+        "id": "86430e79b3044149",
+        "type": "debug",
+        "z": "eb751e6e926f325d",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "3b68a6c821aebbe6",
+        "type": "file",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1560,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "20085b627fa0a495",
+        "type": "switch",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "devEui is not 16 characters",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 350,
+        "y": 320,
+        "wires": [
+            [
+                "2d9b1a1435ee41c4",
+                "533c97dbd98d6b7f"
+            ]
+        ]
+    },
+    {
+        "id": "0180f3c36f9c822a",
+        "type": "file",
+        "z": "eb751e6e926f325d",
+        "name": "String to File",
+        "filename": "final_message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 990,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "09964fb7e3fe51d0",
+        "type": "file",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "filename": "final_message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1200,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "897fbbd81b46efc9",
+        "type": "inject",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.data",
+                "v": "YjY5YjlkMTRlNWU1YjBjMCNoZXkz",
+                "vt": "str"
+            },
+            {
+                "p": "payload.fPort",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "p": "payload.deviceInfo.devEui",
+                "v": "b69b9d14e5e5b0c0",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 370,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7621d9f55c3c73d4",
+        "type": "inject",
+        "z": "eb751e6e926f325d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.data",
+                "v": "YjY5YjlkMTRlNWU1YjBjMCNjbGllbnQ6IEhleSB0aGVyZQ==",
+                "vt": "str"
+            },
+            {
+                "p": "payload.fPort",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "p": "payload.deviceInfo.devEui",
+                "v": "1111111111111111",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fe758aa6746fc0a4",
+        "type": "function",
+        "z": "eb751e6e926f325d",
+        "name": "decode_message_fixed",
+        "func": "var payloadData = msg.payload.data;\nvar newdev = msg.payload.deviceInfo.devEui;\n\nconsole.log(\"payloadData:\", payloadData); // Log the payloadData\n\nif (payloadData) {\n    // Decode the devEui from Base64\n    var decodedDevEui = Buffer.from(payloadData, 'base64').toString('utf-8');\n    // Split the decoded payload using the '#' delimiter\n    var parts = decodedDevEui.split('#');\n    //console.log(\"decodedDevEui:\", decodedDevEui); // Log the decodedDevEui\n\n    // Check if parts[0] is equal to 16 characters\n    if (parts[0] && parts[0].length === 16) {\n        // Add a '#' between newdev and parts[1] in utf-8\n        var combinedPayload = newdev + '#' + parts[1];\n        // Encode the combined payload to Base64\n        var combinedPayloadBase64 = Buffer.from(combinedPayload, 'utf-8').toString('base64');\n\n        // Return the object with the modified payload and other information\n        return {\n            devEui: parts[0],\n            fPort: msg.payload.fPort,\n            confirmed: false,\n            payload: combinedPayloadBase64,\n            payload2: combinedPayloadBase64\n        };\n    } else {\n        // If parts[0] is not 16 characters, return an error object\n        return { error: \"devEui is not 16 characters\" };\n    }\n} else {\n    return { error: \"Payload data is missing\" };\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 360,
+        "wires": [
+            [
+                "20085b627fa0a495",
+                "43dc41c544675f0b"
+            ]
+        ]
+    },
+    {
+        "id": "a00ac2e6e6562d62",
+        "type": "link in",
+        "z": "0b71e225112068c6",
+        "name": "link in 4",
+        "links": [
+            "78179c6ba08c0abe"
+        ],
+        "x": 225,
+        "y": 180,
+        "wires": [
+            [
+                "991a02afdae4d5bd"
+            ]
+        ]
+    },
+    {
+        "id": "991a02afdae4d5bd",
+        "type": "file in",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "filename": "final_message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "12536d51cde2b4df"
+            ]
+        ]
+    },
+    {
+        "id": "12536d51cde2b4df",
+        "type": "csv",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": true,
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "86b79bc32cc57ea8",
+                "dcf17a790672e47c"
+            ]
+        ]
+    },
+    {
+        "id": "d967a26368909153",
+        "type": "debug",
+        "z": "0b71e225112068c6",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cc71428661125a5c",
+        "type": "device downlink",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "server": "192.168.0.1:8080",
+        "useTls": false,
+        "apiToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjaGlycHN0YWNrIiwiaXNzIjoiY2hpcnBzdGFjayIsInN1YiI6IjA3NzUzNzY0LWUzMDItNGE1YS1hZDMwLWU5ZDBiNDY2NjkxZSIsInR5cCI6ImtleSJ9.y6g8sIMVO8FjjRD5fp3odHVJHIdWkt8RssMTfa_Ax7U",
+        "encoding": "base64",
+        "x": 880,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "963211b7edbd642f",
+        "type": "function",
+        "z": "0b71e225112068c6",
+        "name": "function 7",
+        "func": "// Function to check if a row is empty\nfunction isEmptyRow(row) {\n    // Check if every field in the row is empty\n    return Object.values(row).every(value => value === '' || value === null);\n}\n\n// Extract the array of objects (rows) from the incoming message payload\nvar rows = msg.payload;\n\n// Filter out the empty rows\nvar filteredRows = rows.filter(row => !isEmptyRow(row));\n\n// Pass the filtered array to the next node\nmsg.payload = filteredRows;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dcf17a790672e47c",
+        "type": "function",
+        "z": "0b71e225112068c6",
+        "name": "function 8",
+        "func": "// Get the global variable\nvar globaldevEui = global.get(\"myGlobaldevEui\");\n\n// Extract the payload from the incoming message\nvar messages = msg.payload;\n\n// Define a new message object\nvar newMsg = {};\nvar deleteIndex = -1; // Index of the message to delete\nvar deleterow = false;\n\n// Loop through the messages to find the first match\nfor (var i = 0; i < messages.length; i++) {\n    var message = messages[i];\n    if (message.col1 === globaldevEui) {\n        // When a match is found, construct the new message object\n        newMsg = {\n            devEui: message.col1,\n            fPort: message.col2,\n            confirmed: false,\n            payload: message.col4, // Assuming this is the intended data field\n        };\n        deleterow = true;\n        deleteIndex = i; // Set the index to delete\n        break; // Stop the loop as we found our match\n    }\n}\n\n// Prepare the outputs\nvar output1, output2, output3;\n\nif (deleterow == true) {\n    // If a match was found, remove the message from the array\n    messages.splice(deleteIndex, 1);\n    // Set the first output to the new message\n    output1 = newMsg;\n} else {\n    // If no match is found, return the default message\n    // Encode \"#FALSE\" into base64\n    var falsePayload = Buffer.from(\"#FALSE\").toString('base64');\n    output1 = {\n        devEui: globaldevEui,\n        fPort: 1,\n        confirmed: false,\n        payload: falsePayload\n    };\n    output3 = { payload: messages };\n}\n\n// The second output is always the original message array with the sent row deleted\noutput2 = { payload: messages };\n\n// Return the array of outputs\nreturn [output1, output2, output3];\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 260,
+        "wires": [
+            [
+                "d967a26368909153",
+                "cc71428661125a5c"
+            ],
+            [
+                "b7c47b00fbd18115"
+            ],
+            [
+                "ada29d931079b68d",
+                "fb9103dd5beaf89a"
+            ]
+        ]
+    },
+    {
+        "id": "b7c47b00fbd18115",
+        "type": "csv",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": false,
+        "x": 870,
+        "y": 420,
+        "wires": [
+            [
+                "59b646adcc311f15"
+            ]
+        ]
+    },
+    {
+        "id": "59b646adcc311f15",
+        "type": "file",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "filename": "final_message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1020,
+        "y": 420,
+        "wires": [
+            [
+                "82025f635d902e82"
+            ]
+        ]
+    },
+    {
+        "id": "eb12c7601d2fdde1",
+        "type": "debug",
+        "z": "0b71e225112068c6",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "82025f635d902e82",
+        "type": "file in",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "filename": "final_message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1220,
+        "y": 420,
+        "wires": [
+            [
+                "eb12c7601d2fdde1"
+            ]
+        ]
+    },
+    {
+        "id": "86b79bc32cc57ea8",
+        "type": "debug",
+        "z": "0b71e225112068c6",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "fb9103dd5beaf89a",
+        "type": "debug",
+        "z": "0b71e225112068c6",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "ada29d931079b68d",
+        "type": "csv",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": false,
+        "x": 870,
+        "y": 480,
+        "wires": [
+            [
+                "88e5dad1d23013e4"
+            ]
+        ]
+    },
+    {
+        "id": "88e5dad1d23013e4",
+        "type": "file",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1000,
+        "y": 480,
+        "wires": [
+            [
+                "2f0669534414a946"
+            ]
+        ]
+    },
+    {
+        "id": "2f0669534414a946",
+        "type": "file in",
+        "z": "0b71e225112068c6",
+        "name": "",
+        "filename": "message",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1140,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    }
+]
